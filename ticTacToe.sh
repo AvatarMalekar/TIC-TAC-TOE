@@ -2,6 +2,8 @@
 echo "---------------------------------------------:WELLCOME TO TIC TAC TOE:--------------------------------------------------------"
 NUMBER_OF_ROWS=3
 NUMBER_OF_COLUMNS=3
+PLAYER=0
+COMPUTER=1
 X=0
 O=1
 declare -a gameBoard
@@ -25,6 +27,16 @@ function getAssignedLetter(){
 		echo $"O"
 	fi
 }
+function whoWillPlayFirst(){
+	local toss=$((RANDOM%2))
+	if [ $toss -eq $PLAYER ]
+	then
+		echo $PLAYER
+	else
+		echo $COMPUTER
+	fi
 
+}
 boardReset
 userLetter=$(getAssignedLetter)
+firstTurnToPlay=$(whoWillPlayFirst)
