@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 echo "---------------------------------------------:WELLCOME TO TIC TAC TOE:--------------------------------------------------------"
 NUMBER_OF_ROWS=3
 NUMBER_OF_COLUMNS=3
@@ -52,7 +52,57 @@ function gameBoardDisplay(){
 		echo "-------------"
 	done
 }
+
+function checkWinner(){
+	local str=""
+	local curentStatus
+	for (( i=0; i<8; i++ ))
+	do
+		case $i in
+			0)
+				str="${gameBoard[0,0]}${gameBoard[0,1]}${gameBoard[0,2]}"
+				;;
+			1)
+				str="${gameBoard[1,0]}${gameBoard[1,1]}${gameBoard[1,2]}"
+				;;
+			2)
+				str="${gameBoard[2,0]}${gameBoard[2,1]}${gameBoard[2,2]}"
+				;;
+			3)
+				str="${gameBoard[0,0]}${gameBoard[1,0]}${gameBoard[2,0]}"
+				;;
+			4)
+				str="${gameBoard[0,1]}${gameBoard[1,1]}${gameBoard[2,1]}"
+				;;
+			5)
+				str="${gameBoard[0,2]}${gameBoard[1,2]}${gameBoard[2,2]}"
+				;;
+			6)
+				str="${gameBoard[0,0]}${gameBoard[1,1]}${gameBoard[2,2]}"
+				;;
+			7)
+				str="${gameBoard[2,0]}${gameBoard[1,1]}${gameBoard[0,2]}"
+				;;
+			*)
+				echo "Invalid entry"
+				;;
+		esac
+		if [[ $str == $"XXX" ]]
+		then
+			curentStatus="X"
+			break;
+		elif [[ $str == $"OOO" ]]
+		then
+			curentStatus="O"
+			break
+		else
+			curentStatus="change in turn"
+		fi
+	done
+	echo $curentStatus
+}
 boardReset
 userLetter=$(getAssignedLetter)
 firstTurnToPlay=$(whoWillPlayFirst)
 gameBoardDisplay
+gameStatus=$(checkWinner)
