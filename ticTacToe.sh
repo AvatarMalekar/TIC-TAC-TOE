@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 echo "---------------------------------------------:WELLCOME TO TIC TAC TOE:--------------------------------------------------------"
 NUMBER_OF_ROWS=3
 NUMBER_OF_COLUMNS=3
@@ -6,6 +6,7 @@ PLAYER=0
 COMPUTER=1
 X=0
 O=1
+
 declare -a gameBoard
 
 function boardReset(){
@@ -37,6 +38,21 @@ function whoWillPlayFirst(){
 	fi
 
 }
+
+function gameBoardDisplay(){
+	echo "-------------"
+	for (( i=0; i<$NUMBER_OF_COLUMNS; i++ ))
+	do
+		for (( j=0; j<$NUMBER_OF_ROWS; j++ ))
+		do
+			echo -n "|"
+			printf " ${gameBoard[$i,$j]} "
+		done
+		echo "|"
+		echo "-------------"
+	done
+}
 boardReset
 userLetter=$(getAssignedLetter)
 firstTurnToPlay=$(whoWillPlayFirst)
+gameBoardDisplay
