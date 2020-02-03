@@ -101,6 +101,13 @@ function checkWinner(){
 	done
 	echo $curentStatus
 }
+
+function smartComputer(){
+
+
+echo 
+
+}
 boardReset
 userLetter=$(getAssignedLetter)
 firstTurnToPlay=$(whoWillPlayFirst)
