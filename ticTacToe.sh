@@ -101,11 +101,102 @@ function checkWinner(){
 	done
 	echo $curentStatus
 }
+function getCoputerLetter(){
+local letter=$1
+	if [[ letter == $"X" ]]
+	then 
+		echo $"O"
+	else
+		echo $"X"
+	fi
+}
+function checkBoard(){
+	local fillLetter=$1
+	local checkLetter=$2
+	local retFlag=1
+			if [[ ${gameBoard[0,0]} == $checkLetter && ${gameBoard[0,1]} == $checkLetter && ${gameBoard[0,2]} == $"." ]]
+			then
+				gameBoard[0,2]=$fillLetter
+			elif [[ ${gameBoard[1,0]} == $checkLetter && ${gameBoard[1,1]} == $checkLetter && ${gameBoard[1,2]} == $"." ]]
+			then
+				gameBoard[1,2]=$fillLetter
+			elif [[ ${gameBoard[2,0]} == $checkLetter && ${gameBoard[2,1]} == $checkLetter && ${gameBoard[2,2]} == $"." ]]
+			then
+				gameBoard[2,2]=$fillLetter
+			elif [[ ${gameBoard[0,1]} == $checkLetter && ${gameBoard[0,2]} == $checkLetter && ${gameBoard[0,0]} == $"." ]]
+			then
+				gameBoard[0,0]=$fillLetter
+			elif [[ ${gameBoard[1,1]} == $checkLetter && ${gameBoard[1,2]} == $checkLetter && ${gameBoard[1,0]} == $"." ]]
+			then
+				gameBoard[1,0]=$fillLetter
+			elif [[ ${gameBoard[2,1]} == $checkLetter && ${gameBoard[2,2]} == $checkLetter && ${gameBoard[2,0]} == $"." ]]
+			then
+				gameBoard[2,0]=$fillLetter
+			elif [[ ${gameBoard[0,0]} == $checkLetter && ${gameBoard[1,0]} == $checkLetter && ${gameBoard[2,0]} == $"." ]]
+			then
+				gameBoard[2,0]=$fillLetter
+			elif [[ ${gameBoard[0,1]} == $checkLetter && ${gameBoard[1,1]} == $checkLetter && ${gameBoard[2,1]} == $"." ]]
+			then
+				gameBoard[2,1]=$fillLetter
+			elif [[ ${gameBoard[0,2]} == $checkLetter && ${gameBoard[1,2]} == $checkLetter && ${gameBoard[2,2]} == $"." ]]
+			then
+				gameBoard[2,2]=$fillLetter
+			elif [[ ${gameBoard[1,0]} == $checkLetter && ${gameBoard[2,0]} == $checkLetter && ${gameBoard[0,0]} == $"." ]]
+			then
+				gameBoard[0,0]=$fillLetter
+			elif [[ ${gameBoard[1,1]} == $checkLetter && ${gameBoard[2,1]} == $checkLetter && ${gameBoard[0,1]} == $"." ]]
+			then
+				gameBoard[0,1]=$fillLetter
+			elif [[ ${gameBoard[1,2]} == $checkLetter && ${gameBoard[2,2]} == $checkLetter && ${gameBoard[0,2]} == $"." ]]
+			then
+				gameBoard[0,2]=$fillLetter
+			elif [[ ${gameBoard[0,0]} == $checkLetter && ${gameBoard[1,1]} == $checkLetter && ${gameBoard[2,2]} == $"." ]]
+			then
+				gameBoard[2,2]=$fillLetter
+			elif [[ ${gameBoard[1,1]} == $checkLetter && ${gameBoard[2,2]} == $checkLetter && ${gameBoard[0,0]} == $"." ]]
+			then
+				gameBoard[0,0]=$fillLetter
+			elif [[ ${gameBoard[2,0]} == $checkLetter && ${gameBoard[1,1]} == $checkLetter && ${gameBoard[0,2]} == $"." ]]
+			then
+				gameBoard[0,2]=$fillLetter
+			elif [[ ${gameBoard[1,1]} == $checkLetter && ${gameBoard[0,2]} == $checkLetter && ${gameBoard[2,0]} == $"." ]]
+			then
+				gameBoard[2,0]=$fillLetter
+			elif [[ ${gameBoard[1,0]} == $checkLetter && ${gameBoard[1,2]} == $checkLetter && ${gameBoard[1,1]} == $"." ]]
+			then
+				gameBoard[1,1]=$fillLetter
+			elif [[ ${gameBoard[0,1]} == $checkLetter && ${gameBoard[2,1]} == $checkLetter && ${gameBoard[1,1]} == $"." ]]
+			then
+				gameBoard[1,1]=$fillLetter
+			elif [[ ${gameBoard[0,0]} == $checkLetter && ${gameBoard[2,2]} == $checkLetter && ${gameBoard[1,1]} == $"." ]]
+			then
+				gameBoard[1,1]=$fillLetter
+			elif [[ ${gameBoard[2,0]} == $checkLetter && ${gameBoard[0,2]} == $checkLetter && ${gameBoard[1,1]} == $"." ]]
+			then
+				gameBoard[1,1]=$fillLetter
+			elif [[ ${gameBoard[0,0]} == $checkLetter && ${gameBoard[0,2]} == $checkLetter && ${gameBoard[0,1]} == $"." ]]
+			then
+				gameBoard[0,1]=$fillLetter
+			elif [[ ${gameBoard[2,0]} == $checkLetter && ${gameBoard[2,2]} == $checkLetter && ${gameBoard[2,1]} == $"." ]]
+			then
+				gameBoard[2,1]=$fillLetter
+			elif [[ ${gameBoard[0,0]} == $checkLetter && ${gameBoard[2,0]} == $checkLetter && ${gameBoard[1,0]} == $"." ]]
+			then
+				gameBoard[1,0]=$fillLetter
+			elif [[ ${gameBoard[0,2]} == $checkLetter && ${gameBoard[2,2]} == $checkLetter && ${gameBoard[1,2]} == $"." ]]
+			then
+				gameBoard[1,2]=$fillLetter
+			else
+				retFlag=0
+			fi
 
+			echo $retFlag
+
+}
 function smartComputer(){
-
-
-echo 
+	local apponentLetter=$(getAssignedLetter)
+	local compLetter=$( getCoputerLetter $apponentLetter ) 
+	local flag=$(checkBoard $compLetter $compLetter)
 
 }
 boardReset
@@ -113,3 +204,26 @@ userLetter=$(getAssignedLetter)
 firstTurnToPlay=$(whoWillPlayFirst)
 gameBoardDisplay
 gameStatus=$(checkWinner)
+smartComputer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
