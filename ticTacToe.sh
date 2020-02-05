@@ -197,7 +197,7 @@ function smartComputer(){
 	local apponentLetter=$(getAssignedLetter)
 	local compLetter=$( getCoputerLetter $apponentLetter ) 
 	local flag=$(checkBoard $compLetter $compLetter)
-
+	local flag=$(checkBoard $apponentLetter $compLetter)
 }
 boardReset
 userLetter=$(getAssignedLetter)
