@@ -142,10 +142,29 @@ function takeCenter(){
 	fi
 }
 
+function takeSides(){
+	retFlag=1
+	if [[ ${gameBoard[1,0]} == $"." ]]
+	then
+		gameBoard[1,0]=$fillLetter
+	elif [[ ${gameBoard[0,1]} == $"." ]]
+	then
+		gameBoard[0,1]=$fillLetter
+	elif [[ ${gameBoard[1,2]} == $"." ]]
+	then
+		gameBoard[1,2]=$fillLetter
+	elif [[ ${gameBoard[2,1]} == $"." ]]
+	then
+		gameBoard[2,1]=$fillLetter
+	else
+		retflag=0
+	fi
+}
+
 function checkBoard(){
 	local fillLetter=$1
 	local checkLetter=$2
-	local retFlag=1
+	 retFlag=1
 			if [[ ${gameBoard[0,0]} == $checkLetter && ${gameBoard[0,1]} == $checkLetter && ${gameBoard[0,2]} == $"." ]]
 			then
 				gameBoard[0,2]=$fillLetter
@@ -222,8 +241,6 @@ function checkBoard(){
 				retFlag=0
 			fi
 
-			echo $retFlag
-
 }
 function smartComputer(){
 	local apponentLetter=$(getAssignedLetter)
@@ -232,6 +249,7 @@ function smartComputer(){
 	local flag=$(checkBoard $apponentLetter $compLetter)
 	takeCorners $compLetter
 	takeCenter $compLetter
+	takeSides $compLetter
 }
 boardReset
 userLetter=$(getAssignedLetter)
