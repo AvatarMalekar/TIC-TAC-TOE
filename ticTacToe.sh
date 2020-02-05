@@ -131,6 +131,17 @@ function takeCorners(){
 	fi
 }
 
+function takeCenter(){
+	retFlag=1
+	local fillLetter=$1
+	if [[ ${gameBoard[1,1]} == $"." ]]
+	then
+		gameBoard[1,1]=$fillLetter
+	else
+		retflag=0
+	fi
+}
+
 function checkBoard(){
 	local fillLetter=$1
 	local checkLetter=$2
@@ -220,6 +231,7 @@ function smartComputer(){
 	local flag=$(checkBoard $compLetter $compLetter)
 	local flag=$(checkBoard $apponentLetter $compLetter)
 	takeCorners $compLetter
+	takeCenter $compLetter
 }
 boardReset
 userLetter=$(getAssignedLetter)
