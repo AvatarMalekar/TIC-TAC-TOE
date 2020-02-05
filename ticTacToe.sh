@@ -110,6 +110,27 @@ local letter=$1
 		echo $"X"
 	fi
 }
+
+function takeCorners(){
+	retFlag=1
+	local fillLetter=$1
+	if [[ ${gameBoard[0,0]} == $"." ]]
+	then
+		gameBoard[0,0]=$fillLetter
+	elif [[ ${gameBoard[2,2]} == $"." ]]
+	then
+		gameBoard[2,2]=$fillLetter
+	elif [[ ${gameBoard[2,0]} == $"." ]]
+	then
+		gameBoard[2,0]=$fillLetter
+	elif [[ ${gameBoard[0,2]} == $"." ]]
+	then
+		gameBoard[0,2]=$fillLetter
+	else
+		retflag=0
+	fi
+}
+
 function checkBoard(){
 	local fillLetter=$1
 	local checkLetter=$2
@@ -198,6 +219,7 @@ function smartComputer(){
 	local compLetter=$( getCoputerLetter $apponentLetter ) 
 	local flag=$(checkBoard $compLetter $compLetter)
 	local flag=$(checkBoard $apponentLetter $compLetter)
+	takeCorners $compLetter
 }
 boardReset
 userLetter=$(getAssignedLetter)
