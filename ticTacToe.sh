@@ -1,6 +1,5 @@
-
 #!/bin/bash
-echo "---------------------------------------------:WELLCOME TO TIC TAC TOE:--------------------------------------------------------"
+echo "----------------------------------------------:WELLCOME TO TIC TAC TOE:--------------------------------------------------------"
 
 #CONSTANT
 readonly NUMBER_OF_ROWS=3
@@ -63,73 +62,80 @@ function gameBoardDisplay(){
 
 function displayWinner(){
 	local strValue=$1
-	if [[ $strValue == $"XXX" ]]
+	if [[	$strValue == $"XXX" || $strValue == $"OOO" ]]
 	then
-		if [[ $"X" == $userLetter ]]
+		if [[ $strValue == "$userLetter$userLetter$userLetter" ]]
 		then
-			echo "YOU WIN.."
+			echo "CONGRATS..!! YOU WON..!!"
 		else
-			echo "Computer Wins"
-		fi
-		exit 0
-	elif [[ $strValue == $"OOO" ]]
-	then
-		if [[ $"O" == $userLetter ]]
-		then
-			echo "YOU WIN.."
-		else
-			echo "Computer Wins.."
+			echo "COMPUTER WON..!!"
 		fi
 		exit 0
 	fi
 }
 
+function checkWinRows(){
+	for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
+	do
+		str=""
+		for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
+		do
+			str="$str${gameBoard[$i,$j]}"
+		done
+			displayWinner $str
+	done
+}
+
+function checkWinColumn(){
+	for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
+	do
+		str=""
+		for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
+		do
+			str="$str${gameBoard[$j,$i]}"
+		done
+		displayWinner $str
+	done
+}
+
+function checkWinFirstDigonal(){
+	str=""
+	for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
+	do
+		for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
+		do
+			if [ $i -eq $j ]
+			then
+				str="$str${gameBoard[$i,$j]}"
+			fi
+		done
+	done
+	displayWinner $str
+}
+
+function checkWinSecondDigonal(){
+	str=""
+	for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
+	do
+		for (( j=$((2-$i)); j<$NUMBER_OF_COLUMNS; j++ ))
+		do
+			str="$str${gameBoard[$i,$j]}"
+			break;
+		done
+	done
+	displayWinner $str
+}
+
 function checkWinner(){
-	local str
+	str=""
 	local curentStatus
 	((tieCounter++))
 	if [ $tieCounter -gt 4 ] #4 IS MINIMUM MOVES TO WIN
 	then
-		for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
-		do
-			str=""
-			for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
-			do
-				str="$str${gameBoard[$i,$j]}"
-			done
-			displayWinner $str
-		done
-		for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
-		do
-			str=""
-			for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
-			do
-				str="$str${gameBoard[$j,$i]}"
-			done
-			displayWinner $str
-		done
-		str=""
-		for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
-		do
-			for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
-			do
-				if [ $i -eq $j ]
-				then
-					str="$str${gameBoard[$i,$j]}"
-				fi
-			done
-		done
-		displayWinner $str
-		str=""
-		for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
-		do
-			for (( j=$((2-$i)); j<$NUMBER_OF_COLUMNS; j++ ))
-			do
-				str="$str${gameBoard[$i,$j]}"
-				break;
-			done
-		done
-		displayWinner $str
+		checkWinRows
+		checkWinColumn
+		checkWinFirstDigonal
+		checkWinSecondDigonal
 		if [ $tieCounter -gt 8 ] # 8 IS NUMBER OF BLOCKS IN TIC-TAC-TOE
 		then
 			echo "Its a Tie..Both Played Well.."
@@ -239,78 +245,99 @@ function setValue(){
 	fi
 }
 
-function checkBoard(){
+function checkBoardForRow(){
 	local fillLetter=$1
 	local checkLetter=$2
-	retFlag=0
-	flag2=0
 	if [ $flag2 -eq 0 ]
 	then
-	for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
-	do
-		initialize
-		for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
+		for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
 		do
-			setValue $i $j $checkLetter
-		done
-		if [ $counter1 -eq 2 -a $counter2 -eq 1 ]
-		then
-			insertValue $x $y $fillLetter
-		fi
-	done
-	fi
-
-	if [ $flag2 -eq 0 ]
-	then
-	for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
-	do
-		initialize
-		for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
-		do
-			setValue $j $i $checkLetter
-		done
-		if [ $counter1 -eq 2 -a $counter2 -eq 1 ]
-		then
-			insertValue $x $y $fillLetter
-		fi
-	done
-	fi
-
-	if [ $flag2 -eq 0 ]
-	then
-	initialize
-	for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
-	do
-		for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
-		do
-			if [ $i -eq $j ]
-			then
+			initialize
+			for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
+			do
 				setValue $i $j $checkLetter
+			done
+			if [ $counter1 -eq 2 -a $counter2 -eq 1 ]
+			then
+				insertValue $x $y $fillLetter
 			fi
 		done
-		if [ $counter1 -eq 2 -a $counter2 -eq 1 ]
-		then
-			insertValue $x $y $fillLetter
-		fi
-	done
 	fi
+}
 
+function checkBoardForColumn(){
+	local fillLetter=$1
+	local checkLetter=$2
 	if [ $flag2 -eq 0 ]
 	then
-	initialize
-	for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
-	do
-		for (( j=$((2-$i)); j<$NUMBER_OF_COLUMNS; j++ ))
+		for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
 		do
-			setValue $i $j $checkLetter
-			break;
+			initialize
+			for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
+			do
+				setValue $j $i $checkLetter
+			done
+			if [ $counter1 -eq 2 -a $counter2 -eq 1 ]
+			then
+				insertValue $x $y $fillLetter
+			fi
 		done
-		if [ $counter1 -eq 2 -a $counter2 -eq 1 ]
-		then
-			insertValue $x $y $fillLetter
-		fi
-	done
 	fi
+}
+
+function checkBoardForFirstDigonal(){
+	local fillLetter=$1
+	local checkLetter=$2
+	if [ $flag2 -eq 0 ]
+	then
+		initialize
+		for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
+		do
+			for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
+			do
+				if [ $i -eq $j ]
+				then
+					setValue $i $j $checkLetter
+				fi
+			done
+			if [ $counter1 -eq 2 -a $counter2 -eq 1 ]
+			then
+				insertValue $x $y $fillLetter
+			fi
+		done
+	fi
+}
+
+function checkBoardForSecondDigonal(){
+	local fillLetter=$1
+	local checkLetter=$2
+	if [ $flag2 -eq 0 ]
+	then
+		initialize
+		for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
+		do
+			for (( j=$((2-$i)); j<$NUMBER_OF_COLUMNS; j++ ))
+			do
+				setValue $i $j $checkLetter
+				break;
+			done
+			if [ $counter1 -eq 2 -a $counter2 -eq 1 ]
+			then
+				insertValue $x $y $fillLetter
+			fi
+		done
+	fi
+}
+
+function checkBoard(){
+	local letterToCheck=$1
+	local letterToFill=$2
+	retFlag=0
+	flag2=0
+	checkBoardForRow $letterToCheck $letterToFill
+	checkBoardForColumn $letterToCheck $letterToFill
+	checkBoardForFirstDigonal $letterToCheck $letterToFill
+	checkBoardForSecondDigonal $letterToCheck $letterToFill
 }
 
 function smartComputer(){
@@ -347,12 +374,12 @@ function humanPlayer(){
 		read -p "Enter the position::" position
 		i=$(($position/10))
 		j=$(($position%10))
-	if [[ ${gameBoard[$i,$j]} == $"." ]]
-	then
-		checkFlag=1
-	else
-		echo "Position is already occupied.."
-	fi
+		if [[ ${gameBoard[$i,$j]} == $"." ]]
+		then
+			checkFlag=1
+		else
+			echo "Position is already occupied.."
+		fi
 	done
 	gameBoard[$i,$j]=$userLetter
 	gameBoardDisplay
@@ -360,6 +387,7 @@ function humanPlayer(){
 	smartComputer
 }
 
+#MAIN
 boardReset
 userLetter=$(getAssignedLetter)
 computerLetter=$(getComputerLetter $userLetter )
