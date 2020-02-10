@@ -18,7 +18,7 @@ function boardReset(){
 	do
 		for(( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
 		do
-			gameBoard[$i,$j]="."	
+			gameBoard[$i,$j]="."
 		done
 	done
 }
@@ -66,7 +66,7 @@ function displayWinner(){
 	then
 		if [[ $strValue == "$userLetter$userLetter$userLetter" ]]
 		then
-			echo "CONGRATS..!! YOU WON..!!"
+			echo "CONGRATULATIONS..!! YOU WON..!!"
 		else
 			echo "COMPUTER WON..!!"
 		fi
@@ -74,68 +74,38 @@ function displayWinner(){
 	fi
 }
 
-function checkWinRows(){
+function checkWinForAll(){
+	str3=""
+	str4=""
+	counterDigonal=2
 	for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
 	do
-		str=""
+		str1=""
+		str2=""
 		for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
 		do
-			str="$str${gameBoard[$i,$j]}"
-		done
-			displayWinner $str
-	done
-}
-
-function checkWinColumn(){
-	for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
-	do
-		str=""
-		for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
-		do
-			str="$str${gameBoard[$j,$i]}"
-		done
-		displayWinner $str
-	done
-}
-
-function checkWinFirstDigonal(){
-	str=""
-	for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
-	do
-		for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
-		do
+			str1="$str1${gameBoard[$i,$j]}"
+			str2="$str2${gameBoard[$j,$i]}"
 			if [ $i -eq $j ]
 			then
-				str="$str${gameBoard[$i,$j]}"
+				str3="$str3${gameBoard[$i,$j]}"
 			fi
 		done
+		str4="$str4${gameBoard[$i,$counterDigonal]}"
+		((counterDigonal--))
+		displayWinner $str1
+		displayWinner $str2
+		displayWinner $str3
+		displayWinner $str4
 	done
-	displayWinner $str
 }
-
-function checkWinSecondDigonal(){
-	str=""
-	for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
-	do
-		for (( j=$((2-$i)); j<$NUMBER_OF_COLUMNS; j++ ))
-		do
-			str="$str${gameBoard[$i,$j]}"
-			break;
-		done
-	done
-	displayWinner $str
-}
-
 function checkWinner(){
 	str=""
 	local curentStatus
 	((tieCounter++))
 	if [ $tieCounter -gt 4 ] #4 IS MINIMUM MOVES TO WIN
 	then
-		checkWinRows
-		checkWinColumn
-		checkWinFirstDigonal
-		checkWinSecondDigonal
+		checkWinForAll
 		if [ $tieCounter -gt 8 ] # 8 IS NUMBER OF BLOCKS IN TIC-TAC-TOE
 		then
 			echo "Its a Tie..Both Played Well.."
