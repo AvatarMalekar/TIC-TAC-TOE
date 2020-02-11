@@ -99,6 +99,7 @@ function checkWinForAll(){
 		displayWinner $str4
 	done
 }
+
 function checkWinner(){
 	str=""
 	local curentStatus
@@ -114,7 +115,7 @@ function checkWinner(){
 	fi
 	if [[ $str != $"XXX" && $str != "OOO" ]]
 	then
-		echo "change in tern"
+		echo "change in turn"
 	fi
 }
 
@@ -163,7 +164,7 @@ function takeSides(){
 	do
 		for (( j=0; j<$(($NUMBER_OF_COLUMNS-1)); j++ ))
 		do
-			if [ $(($i%2)) -eq 0 ]
+			if [ $(($j%2)) -eq 0 ]
 			then
 				if [[ ${gameBoard[$i,$(($i+1))]} == $"." ]]
 				then
@@ -183,131 +184,105 @@ function takeSides(){
 	done
 }
 
-function initialize(){
-	x=0
-	y=0
-	counter1=0
-	counter2=0
-}
-
 function insertValue(){
 	local p=$1
 	local q=$2
 	local setLetter=$3
 	gameBoard[$p,$q]=$setLetter
 	retFlag=1
-	flag2=1
-}
-
-function setValue(){
-	local p=$1
-	local q=$2
-	local letterToMatch=$3
-	if [[ ${gameBoard[$p,$q]} == $letterToMatch ]]
-	then
-		((counter1++))
-	fi
-	if [[ ${gameBoard[$p,$q]} == $"." ]]
-	then
-		x=$p
-		y=$q
-		((counter2++))
-	fi
-}
-
-function checkBoardForRow(){
-	local fillLetter=$1
-	local checkLetter=$2
-	if [ $flag2 -eq 0 ]
-	then
-		for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
-		do
-			initialize
-			for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
-			do
-				setValue $i $j $checkLetter
-			done
-			if [ $counter1 -eq 2 -a $counter2 -eq 1 ]
-			then
-				insertValue $x $y $fillLetter
-			fi
-		done
-	fi
-}
-
-function checkBoardForColumn(){
-	local fillLetter=$1
-	local checkLetter=$2
-	if [ $flag2 -eq 0 ]
-	then
-		for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
-		do
-			initialize
-			for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
-			do
-				setValue $j $i $checkLetter
-			done
-			if [ $counter1 -eq 2 -a $counter2 -eq 1 ]
-			then
-				insertValue $x $y $fillLetter
-			fi
-		done
-	fi
-}
-
-function checkBoardForFirstDigonal(){
-	local fillLetter=$1
-	local checkLetter=$2
-	if [ $flag2 -eq 0 ]
-	then
-		initialize
-		for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
-		do
-			for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
-			do
-				if [ $i -eq $j ]
-				then
-					setValue $i $j $checkLetter
-				fi
-			done
-			if [ $counter1 -eq 2 -a $counter2 -eq 1 ]
-			then
-				insertValue $x $y $fillLetter
-			fi
-		done
-	fi
-}
-
-function checkBoardForSecondDigonal(){
-	local fillLetter=$1
-	local checkLetter=$2
-	if [ $flag2 -eq 0 ]
-	then
-		initialize
-		for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
-		do
-			for (( j=$((2-$i)); j<$NUMBER_OF_COLUMNS; j++ ))
-			do
-				setValue $i $j $checkLetter
-				break;
-			done
-			if [ $counter1 -eq 2 -a $counter2 -eq 1 ]
-			then
-				insertValue $x $y $fillLetter
-			fi
-		done
-	fi
 }
 
 function checkBoard(){
-	local letterToCheck=$1
-	local letterToFill=$2
+	local fillLetter=$1
+	local checkLetter=$2
+	local counterForDigo=2
 	retFlag=0
-	flag2=0
-	checkBoardForRow $letterToCheck $letterToFill
-	checkBoardForColumn $letterToCheck $letterToFill
-	checkBoardForFirstDigonal $letterToCheck $letterToFill
-	checkBoardForSecondDigonal $letterToCheck $letterToFill
+	counter5=0
+	counter6=0
+	counter7=0
+	counter8=0
+	x=0
+	y=0
+	r=0
+	s=0
+	p=0
+	q=0
+	c=0
+	n=0
+	for (( i=0; i<$NUMBER_OF_ROWS; i++ ))
+	do
+		counter1=0
+		counter2=0
+		counter3=0
+		counter4=0
+		for (( j=0; j<$NUMBER_OF_COLUMNS; j++ ))
+		do
+			if [[ ${gameBoard[$i,$j]} == $checkLetter ]]
+			then
+				((counter1++))
+			fi
+			if [[ ${gameBoard[$i,$j]} == $"." ]]
+			then
+				x=$i
+				y=$j
+				((counter2++))
+			fi
+			if [[ ${gameBoard[$j,$i]} == $checkLetter ]]
+			then
+				((counter3++))
+			fi
+			if [[ ${gameBoard[$j,$i]} == $"." ]]
+			then
+				r=$j
+				s=$i
+				((counter4++))
+			fi
+			if [ $i -eq $j ]
+			then
+				if [[ ${gameBoard[$i,$j]} == $checkLetter ]]
+				then
+					((counter5++))
+				fi
+				if [[ ${gameBoard[$i,$j]} == $"." ]]
+				then
+					p=$i
+					q=$j
+					((counter6++))
+				fi
+			fi
+		done
+		if [[ ${gameBoard[$i,$counterForDigo]} == $checkLetter ]]
+		then
+			((counter7++))
+		fi
+		if [[ ${gameBoard[$i,$counterForDigo]} == $"." ]]
+		then
+			c=$i
+			n=$counterForDigo
+			((counter8++))
+		fi
+		if [ $counter1 -eq 2 -a $counter2 -eq 1 ]
+		then
+			insertValue $x $y $fillLetter
+			return
+		fi
+		if [ $counter3 -eq 2 -a $counter4 -eq 1 ]
+		then
+			insertValue $r $s $fillLetter
+			return
+		fi
+		((counterForDigo--))
+	done
+	if [ $counter5 -eq 2 -a $counter6 -eq 1 ]
+	then
+		insertValue $p $q $fillLetter
+		return
+	fi
+	if [ $counter7 -eq 2 -a $counter8 -eq 1 ]
+	then
+		insertValue $c $n $fillLetter
+		return
+	fi
 }
 
 function smartComputer(){
